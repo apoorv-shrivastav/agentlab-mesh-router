@@ -117,10 +117,11 @@ It is genuinely multi-cloud — three steps owned by three parties, an architect
 
 ## Managed Agents Integration
 
-AgentLab integrates managed agent platforms at the registry and execution layers:
-- **Registry Layer (Google Cloud Agent Platform)**: All step-agents (GCP, AWS, Azure OpenAI) are cataloged in Google Cloud's canonical registry (via `gcloud agent-platform registry agents register`) to expose their routing metadata and capabilities.
-- **AWS Bedrock Managed Runtime (Step 2)**: The causal estimation agent directly invokes an AWS Bedrock Managed Agent runtime (`boto3.client('bedrock-agentcore-runtime')` with `invoke_agent`) when `MOCK=false`.
-- **Custom Wrapper Fallback (Steps 1 & 3)**: The data-prep and readout agents use custom container services wrapping the models (configured with Google's `adk_config.yaml`). This design allows rich database tool calling (e.g. querying GCP BigQuery), bypassing the skills-in-Markdown constraint of the early GCP Managed Agents API.
+AgentLab integrates Google's managed agent framework and multi-cloud runtime platforms at the registry and execution layers:
+
+- **Registry Layer (Google Cloud Agent Platform)**: All pipeline step-agents (GCP, AWS, and Azure OpenAI) are cataloged in Google Cloud's canonical registry (`gcloud agent-platform registry agents register`). This centralizes routing metadata, capabilities text, and cost profiles, enabling the mesh router to perform dynamic routing.
+- **GCP Agent Development Kit (GCP ADK) Wrapper Fallback (Steps 1 & 3)**: For the **Data Prep** and **Readout** agents, custom containers configured via Google's `adk_config.yaml` are deployed. This containerized architecture allows rich database tool calling (e.g. executing queries on GCP BigQuery), bypassing the markdown-only skills constraint present in the early GCP Managed Agents API.
+- **AWS Bedrock Managed Runtime (Step 2)**: The **Causal Estimation** agent directly invokes AWS's managed agent runtime (`boto3.client('bedrock-agentcore-runtime')` with `invoke_agent`) when running in production mode (`MOCK=false`).
 
 ## Pre-Registered Hypotheses
 
