@@ -115,16 +115,6 @@ It is genuinely multi-cloud — three steps owned by three parties, an architect
 
 **But it is deliberately not the headline.** The localization claim — *which step broke, and how do you know* — holds identically whether the pipeline runs on one cloud or three, because localization operates at the *step* level. Cross-cloud makes the demo realistic and the threat model honest (a vendor's silent upgrade on a cloud you don't control). It is a feature of the setting, not the novel contribution. Google shipped cross-cloud *infrastructure* at Next '26 — data federation, networking, traffic observability. AgentLab does not compete with any of it and does not need to.
 
-## What Is Genuinely New
-
-Stated precisely, because originality will be probed:
-
-- **Not new:** routing — RouteLLM, FrugalGPT.
-- **Not new:** cross-cloud infrastructure — Google's Lakehouse, Interconnect, Agent Gateway.
-- **Not new:** generating evals from traces in the abstract — several eval tools draft cases from logs.
-
-**New:** *step-level fault localization in a multi-agent pipeline, wired into a continuous loop that turns each localized failure into targeted eval cases automatically.* The shipped tools each provide a piece — observability, an evaluation API, an optimizer — and every one stops at "here is what happened." None close the gap from a measured quality regression to *the responsible step* to *new tests for that step's failure mode* with no human authoring evals. That attribution-and-regeneration loop, end to end, is what AgentLab is.
-
 ## Pre-Registered Hypotheses
 
 Thresholds set in [`docs/METHODOLOGY.md`](docs/METHODOLOGY.md) *before* any data was collected. The eval rigor here is deliberate — it is how a quality claim becomes a measured result instead of a demo assertion.
@@ -136,19 +126,6 @@ Thresholds set in [`docs/METHODOLOGY.md`](docs/METHODOLOGY.md) *before* any data
 - **H5**: After the loop runs, the degraded step's measured quality recovers by a statistically significant margin.
 
 A failed hypothesis gets honest treatment in the writeup, not concealment.
-
-## What Is NOT Built (Honest Gaps)
-
-- Localization is strong where a step-local oracle exists (the causal step) and weaker where it does not — open-ended outputs are caught by signal drift, which is noisier. This asymmetry is real.
-- The reroute assumes a warm, interchangeable spare agent per step. In production the realistic action is often "pin to last-known-good version and page a human" — the auto-reroute is demo-shaped.
-- No multi-tenant isolation; single project per cloud.
-- No federated billing, auth, or networking — cross-cloud is demonstrated at the agent/quality layer, not production-hardened at the infra layer.
-- No fairness/bias evaluation — task-quality focused only.
-- The `report()` self-diagnostic tool is opt-in by prompt, not enforced.
-- Classifier training sets are small (~2000 labeled examples per failure mode).
-- Triage clustering uses HDBSCAN over UMAP, not a learned representation.
-- The router retrains nightly, not per-request; the bandit only explores cold-start agents.
-- The out-of-bounds detector uses fixed statistical bounds, not a learned model of plausibility.
 
 ## Architecture
 
@@ -183,9 +160,7 @@ A failed hypothesis gets honest treatment in the writeup, not concealment.
 ```
 agentlab/
 ├── README.md  SETUP.md  SCAFFOLD.md  FALLBACK.md
-├── PITCH.md            # stakeholder narrative + 3-min demo + Q&A
 ├── VALIDATION.md       # end-to-end test & validation checklist
-├── TEARDOWN.md         # wipe all cloud + local state to a clean slate
 ├── common/             # schema (the contract layer), config, otel, bq
 ├── orchestrator/       # hub agent, A2A handoff, embeds the router
 ├── agents/             # data_prep (GCP), causal_estimation (AWS),
