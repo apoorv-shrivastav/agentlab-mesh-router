@@ -1,0 +1,55 @@
+<USER_REQUEST>
+this is project idea. Just keep in mind and don't need to do anything - 
+
+AgentLab
+When a multi-agent pipeline produces a confident wrong answer — which step broke, and how do you know?
+AgentLab is an evaluation system for multi-step agent pipelines. It watches production traces, detects quality drift, and does the part nobody else automates: it localizes the regression to the specific step that caused it. From the real failing traces it drafts targeted evaluation cases; a human approves them; the fleet is re-scored against the enlarged suite; the degraded step is rerouted to a healthy agent.
+Built on Gemini 3.5 Flash. The demo pipeline genuinely spans three clouds — but, deliberately, none of the claims below depend on that.
+
+Built for the post-I/O '26 Gemini hackathon. The headline is step-level fault localization — credit assignment in a multi-agent pipeline, attributing a downstream wrong answer to the upstream step responsible. The loop around it — detect → localize → generate evals → human approves → re-score → reroute — is how that localization becomes a measurable repair, live, inside a three-minute demo.
+
+The Hard Problem: Which Step Broke?
+A multi-step agent pipeline returns a bad answer. Three steps touched it — in a larger system, forty. Which one caused the regression?
+This is a credit-assignment problem, and it is not solved. The agent that emits the visibly-wrong output is frequently not the one that broke: a quietly degraded upstream step hands plausible-but-wrong intermediate state to a healthy downstream step, which faithfully turns it into a wrong final answer. Blaming the last agent is blaming the messenger.
+Every agent-observability product shipped in 2026 — Gemini Enterprise, AWS AgentCore, the rest — shows you what each agent did: traces, spans, token counts, latency. None of them tell you which agent is responsible for a drop in output quality. That attribution is left to a human reading traces at 2 a.m.
+AgentLab's core is that attribution: given pr
+<truncated 13820 bytes>
+strator's next run ┘
+
+   surfaced in: the Console (Pipeline · Router · Signals · Triage · Pareto)
+
+Project Structure
+agentlab/
+├── README.md  SETUP.md  SCAFFOLD.md  FALLBACK.md
+├── PITCH.md            # stakeholder narrative + 3-min demo + Q&A
+├── VALIDATION.md       # end-to-end test & validation checklist
+├── TEARDOWN.md         # wipe all cloud + local state to a clean slate
+├── common/             # schema (the contract layer), config, otel, bq
+├── orchestrator/       # hub agent, A2A handoff, embeds the router
+├── agents/             # data_prep (GCP), causal_estimation (AWS),
+│                       #   readout (Azure), + spare agents for reroute
+├── mesh/               # cross-cloud adapters + canonical registry
+├── router/             # baseline, learned, bandit, cascade
+├── signals/            # explicit, regex, classifiers, oob_detector, self_report
+├── triage/             # cluster, localize, generate_tasks, surface, runner
+├── sentry/             # offline_regression, online_cusum
+├── harness/            # tasks (golden sets), scorers, inspect_runner
+├── console/            # Next.js + React + Tailwind dashboard
+├── infra/              # terraform per cloud, docker
+├── scripts/            # seed_demo_data, smoke_test
+└── docs/               # METHODOLOGY, DEMO, ARCHITECTURE
+
+Build order is in SCAFFOLD.md. Cloud setup is in SETUP.md. If something breaks on demo day, FALLBACK.md has the collapse plan.
+License
+MIT.
+Contact
+Apoorv Shrivastava — Senior Data Scientist, Bay Area. LinkedIn · GitHub
+
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-23T10:31:22-07:00.
+</ADDITIONAL_METADATA>
+<USER_SETTINGS_CHANGE>
+The user changed setting `Model Selection` from None to Gemini 3.5 Flash (High). No need to comment on this change if the user doesn't ask about it. If reporting what model you are, please use a human readable name instead of the exact string.
+</USER_SETTINGS_CHANGE>

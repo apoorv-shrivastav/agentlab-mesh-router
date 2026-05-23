@@ -1,0 +1,6 @@
+{
+  "image": "192969248603.dkr.ecr.us-east-1.amazonaws.com/mesh-causal-agent:latest",
+  "command": [],
+  "entryPoint": [],
+  "environment": []
+}

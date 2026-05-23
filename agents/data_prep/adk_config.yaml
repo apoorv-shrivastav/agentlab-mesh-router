@@ -1,0 +1,7 @@
+name: data-prep
+displayName: Data Prep
+description: Pulls A/B experiment raw event data, performs sample ratio mismatch (SRM) checks, and validates randomization.
+model: gemini-2.5-flash
+tools:
+  - type: report
+    description: Logs diagnostic self-report messages.

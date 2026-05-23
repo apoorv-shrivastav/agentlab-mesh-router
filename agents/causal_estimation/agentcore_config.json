@@ -1,0 +1,6 @@
+{
+  "agentName": "causal-estimation",
+  "description": "Causal estimation agent performing CUPED and treatment effect evaluation on Bedrock",
+  "foundationModel": "anthropic.claude-3-5-sonnet-20241022-v2:0",
+  "instruction": "Evaluate the treatment effect (ATE) using CUPED. Log self-reports if data is anomalous."
+}

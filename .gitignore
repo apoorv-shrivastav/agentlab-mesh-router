@@ -1,0 +1,32 @@
+# Environments
+.venv/
+venv/
+ENV/
+env/
+
+# Python cache
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Testing / Linting
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Local databases & model weights
+*.db
+*.pkl
+agentlab.db
+learned_router.pkl
+
+# Setuptools / Packaging
+*.egg-info/
+dist/
+build/
+
+# Environment files
+.env
+.env.*

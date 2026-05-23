@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  router:
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile.causal
+    ports:
+      - "8080:8080"
+    environment:
+      - MOCK=true
+    volumes:
+      - .:/app

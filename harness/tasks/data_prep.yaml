@@ -1,0 +1,80 @@
+- id: dp-task-1
+  prompt: "Check randomization integrity for experiment EXP_101. Dataset path: gs://analytics/exp101_events.csv. Check SRM p-value."
+  expected: "SRM validation PASSED"
+  difficulty: "easy"
+- id: dp-task-2
+  prompt: "Verify sample ratios for mobile landing page test. Treatment: 5400 users, Control: 4600. Check for sample ratio mismatch (SRM)."
+  expected: "SRM validation FAILED"
+  difficulty: "medium"
+- id: dp-task-3
+  prompt: "Run randomization check on signup funnel optimization. Dataset: gs://funnel/signup_v2.parquet."
+  expected: "SRM validation PASSED"
+  difficulty: "easy"
+- id: dp-task-4
+  prompt: "Check randomization integrity for checkout flow A/B test. Treatment: 5020, Control: 4980. Run SRM test."
+  expected: "SRM validation PASSED"
+  difficulty: "easy"
+- id: dp-task-5
+  prompt: "Verify sample ratio mismatch for EXP_202. Users: Treatment 5050, Control 4950."
+  expected: "SRM validation PASSED"
+  difficulty: "medium"
+- id: dp-task-6
+  prompt: "Validate randomization for search ranking test. Dataset: gs://search/rank_v3.csv."
+  expected: "SRM validation PASSED"
+  difficulty: "medium"
+- id: dp-task-7
+  prompt: "Check SRM for heavy imbalance. Treatment: 7000 users, Control: 3000 users."
+  expected: "SRM validation FAILED"
+  difficulty: "easy"
+- id: dp-task-8
+  prompt: "Check randomization integrity for pricing page test. Dataset: gs://pricing/ab_test.parquet."
+  expected: "SRM validation PASSED"
+  difficulty: "medium"
+- id: dp-task-9
+  prompt: "Verify sample ratios for cart redesign experiment. Treatment: 5150, Control: 4850."
+  expected: "SRM validation PASSED"
+  difficulty: "medium"
+- id: dp-task-10
+  prompt: "Run SRM check on recommendation engine v2 launch. Treatment: 5300, Control: 4700."
+  expected: "SRM validation FAILED"
+  difficulty: "medium"
+- id: dp-task-11
+  prompt: "Check randomization for desktop UI revamp test. Dataset: gs://desktop/ab_test.csv."
+  expected: "SRM validation PASSED"
+  difficulty: "easy"
+- id: dp-task-12
+  prompt: "Verify SRM for onboarding flow v3. Treatment: 5080, Control: 4920."
+  expected: "SRM validation PASSED"
+  difficulty: "easy"
+- id: dp-task-13
+  prompt: "Check randomization for notification experiment. Dataset: gs://push/notif_ab.parquet."
+  expected: "SRM validation PASSED"
+  difficulty: "medium"
+- id: dp-task-14
+  prompt: "Verify sample ratios for dark mode roll-out. Treatment: 5200, Control: 4800."
+  expected: "SRM validation PASSED"
+  difficulty: "medium"
+- id: dp-task-15
+  prompt: "Run SRM check for home page banner test. Treatment: 5500, Control: 4500."
+  expected: "SRM validation FAILED"
+  difficulty: "easy"
+- id: dp-task-16
+  prompt: "Check randomization for checkout button layout. Dataset: gs://checkout/btn_v2.csv."
+  expected: "SRM validation PASSED"
+  difficulty: "easy"
+- id: dp-task-17
+  prompt: "Verify sample ratios for checkout flow optimization. Treatment: 5010, Control: 4990."
+  expected: "SRM validation PASSED"
+  difficulty: "easy"
+- id: dp-task-18
+  prompt: "Run SRM check on backend caching engine experiment. Treatment: 5600, Control: 4400."
+  expected: "SRM validation FAILED"
+  difficulty: "medium"
+- id: dp-task-19
+  prompt: "Check randomization for multi-variant test. Treatment A: 5000, Control: 5000."
+  expected: "SRM validation PASSED"
+  difficulty: "medium"
+- id: dp-task-20
+  prompt: "Verify sample ratios for search autocomplete launch. Treatment: 5350, Control: 4650."
+  expected: "SRM validation FAILED"
+  difficulty: "medium"
