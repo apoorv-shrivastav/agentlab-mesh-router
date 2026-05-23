@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import { QRCodeSVG } from 'qrcode.react';
 
 // Define the steps and their attributes
 interface StepMetrics {
@@ -36,7 +37,7 @@ const REASONING_LINES = [
 ];
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<'pipeline' | 'triage' | 'pareto' | 'signals' | 'router'>('pipeline');
+  const [activeTab, setActiveTab] = useState<'pipeline' | 'triage' | 'pareto' | 'signals' | 'router' | 'end'>('pipeline');
   const [simState, setSimState] = useState<'healthy' | 'degraded' | 'triaging' | 'awaiting_approval' | 'rescoring' | 'recovered'>('healthy');
   
   const [dbData, setDbData] = useState<any>(null);
@@ -273,6 +274,7 @@ export default function Home() {
               { id: 'pareto', label: 'Pareto', icon: 'M7 12l3-3 3 3 4-4M8 21h12a2 2 0 002-2V7a2 2 0 00-2-2H8a2 2 0 00-2 2v12a2 2 0 002 2z' },
               { id: 'signals', label: 'Signals', icon: 'M13 10V3L4 14h7v7l9-11h-7z' },
               { id: 'router', label: 'Router', icon: 'M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z' },
+              { id: 'end', label: 'End Card', icon: 'M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z' },
             ].map(tab => {
               const active = activeTab === tab.id;
               return (
@@ -293,7 +295,7 @@ export default function Home() {
                   )}
                 </button>
               );
-            })}
+             })}
           </nav>
 
           {/* Floating Demo Control Panel inside Sidebar */}
@@ -319,6 +321,16 @@ export default function Home() {
               className="w-full text-xs font-display py-2.5 px-4 rounded-md border border-line text-ink-mid hover:text-ink-hi hover:bg-surface-3 transition-all"
             >
               Force Reset System
+            </button>
+          </div>
+
+          {/* Tiny Footer QR Link */}
+          <div className="mt-4 text-center">
+            <button
+              onClick={() => setActiveTab('end')}
+              className="text-[9px] font-mono text-ink-lo hover:text-ink-mid transition-colors uppercase tracking-widest cursor-pointer"
+            >
+              ➔ Scan Repo QR Code
             </button>
           </div>
         </aside>
@@ -986,6 +998,50 @@ export default function Home() {
                     ))}
                   </tbody>
                 </table>
+              </div>
+            </div>
+          </div>
+
+          {/* TAB 6: END CARD VIEW */}
+          <div className={`absolute inset-0 p-8 overflow-y-auto transition-all duration-300 ease-out flex flex-col items-center justify-center ${
+            activeTab === 'end' ? 'opacity-100 translate-y-0 z-10 visible' : 'opacity-0 translate-y-4 pointer-events-none z-0 invisible'
+          }`}>
+            <div className="flex flex-col items-center justify-center max-w-xl mx-auto space-y-8 text-center">
+              {/* Header */}
+              <div>
+                <h1 className="font-display font-bold text-4xl tracking-wider text-ink-hi uppercase">
+                  AgentLab
+                </h1>
+                <p className="font-sans text-xs text-ink-mid mt-2 tracking-wide">
+                  step-level fault localization for multi-agent pipelines
+                </p>
+              </div>
+
+              {/* QR Code Container */}
+              <div className="bg-surface-2 border border-line rounded-xl p-6 shadow-2xl flex flex-col items-center justify-center gap-3">
+                <div className="bg-white p-2 rounded-lg">
+                  <QRCodeSVG
+                    value="https://github.com/apoorv-shrivastav/agentlab-mesh-router"
+                    size={180}
+                    bgColor="#FFFFFF"
+                    fgColor="#0B0E14"
+                    level="M"
+                    marginSize={2}
+                  />
+                </div>
+                <span className="font-mono text-[10px] text-ink-mid tracking-widest uppercase mt-1">
+                  scan for the source ➔
+                </span>
+              </div>
+
+              {/* Closing Quote */}
+              <div className="space-y-3">
+                <blockquote className="font-sans italic text-sm text-ink-hi leading-relaxed max-w-md mx-auto">
+                  "When an agent pipeline gives you a confident wrong answer, the question that matters is which step, and how do you know."
+                </blockquote>
+                <p className="font-mono text-[10px] text-ink-lo tracking-widest uppercase">
+                  Apoorv Shrivastav · Senior Data Scientist
+                </p>
               </div>
             </div>
           </div>
