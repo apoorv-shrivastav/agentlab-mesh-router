@@ -301,10 +301,14 @@ Each milestone is independently runnable and testable. The order is dependency-c
 - Scaffold `console/` — Next.js + Tailwind + shadcn/ui. Apply the design tokens from `CONSOLE_DESIGN.md` §2 (dark theme, the state color language, the specified font pairings — **not** the default Inter/Material look).
 - `console/lib/api.ts` — typed client for the router service.
 - Five views, per `CONSOLE_DESIGN.md` §4: **Pipeline** (the workflow as connected step-nodes with the three health states and the animated propagation edge — the headline view), **Triage** (streaming reasoning, the localization verdict card, the Approve button), **Pareto** (the restyled cost-vs-quality chart), **Signals** (per-step signal sparklines), **Router** (live decision feed).
-- Priority order if time is short: Pipeline, Triage, Pareto to full polish; Signals and Router functional and on-theme.
-- Containerize; deploy per SETUP.md § 4.3.
+- **Reset feature.** The Reset feature is specified in three places:
+  1. **The feature itself**: A visible "Reset to the start of the demo" control that restores the BigQuery demo tables to their pre-failure seeded state in one action.
+  2. **The design consequence (decide-before-you-build)**: The loop's write path (Approve, re-score, reroute) must write to **demo-scoped** tables, not a global production golden set. If the build agent writes Approve globally and it is discovered later, retrofitting scoping is painful. This is a stated constraint before the Approve handler exists.
+  3. **The checkpoint**: Verifies Reset works by running the loop twice with a Reset between and confirming identical results.
+- Priority order if time is short: Pipeline, Triage, Pareto to full polish; Signals and Router functional and on-theme. Reset is not optional — it is required for the shareable link and for rehearsal.
+- Containerize; deploy per SETUP.md § 4.3 and `DEPLOY.md` (separate Cloud Run service, calls the router by URL — not one container with two processes).
 
-**Checkpoint**: console runs locally against the router; all five views render real (seeded then live) data; the Pipeline view's cause/symptom states are visually unmistakable per the `CONSOLE_DESIGN.md` §6 checklist. **Stop here.**
+**Checkpoint**: console runs locally against the router; all five views render real (seeded then live) data; the Pipeline view's cause/symptom states are visually unmistakable per the `CONSOLE_DESIGN.md` §6 checklist; the Reset control restores the pre-failure state, and running the loop twice with a Reset between yields the same result both times. **Stop here.**
 
 ### Milestone 9 — Demo Polish
 - `docs/DEMO.md` — the demo script with per-beat timing and who-clicks-what (mirrors PITCH.md's demo script; target 3:00, ~3:15 ceiling).
