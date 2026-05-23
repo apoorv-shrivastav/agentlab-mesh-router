@@ -341,7 +341,7 @@ export default function Home() {
             </div>
 
             {/* Node diagram workspace */}
-            <div className="w-[896px] h-[384px] relative border border-line bg-surface-1/40 rounded-xl overflow-hidden p-6 shadow-2xl flex-shrink-0">
+            <div className="w-[896px] h-[432px] relative border border-line bg-surface-1/40 rounded-xl overflow-hidden p-6 shadow-2xl flex-shrink-0">
               {/* SVG Connecting Flow Lines */}
               <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 0 }}>
                 <defs>
