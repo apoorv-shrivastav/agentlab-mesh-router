@@ -1,0 +1,117 @@
+@import "tailwindcss";
+
+:root {
+  /* Surfaces — near-black, slightly cool, layered for depth */
+  --surface-0:  #0B0E14;   /* app background */
+  --surface-1:  #12161F;   /* panel background */
+  --surface-2:  #1A2030;   /* raised card / node background */
+  --surface-3:  #232B3D;   /* hover / active raise */
+
+  /* Ink */
+  --ink-hi:     #E6EAF2;   /* primary text */
+  --ink-mid:    #9AA4B8;   /* secondary text, labels */
+  --ink-lo:     #5C6679;   /* tertiary, axis ticks, disabled */
+
+  /* State — the alarm language. Used sparingly, with intent. */
+  --ok:         #3DD68C;   /* healthy. green. calm. */
+  --warn:       #F2B544;   /* amber. "contaminated" / propagated failure. */
+  --fault:      #F2555A;   /* red. THE BROKEN STEP. the cause. */
+  --info:       #5B9DFF;   /* routing decisions, neutral agent activity */
+
+  /* State glows — same hues at low alpha for halos/pulses */
+  --ok-glow:    rgba(61, 214, 140, 0.16);
+  --warn-glow:  rgba(242, 181, 68, 0.18);
+  --fault-glow: rgba(242, 85, 90, 0.22);
+
+  /* Lines */
+  --line:       #2A3247;   /* hairline borders, grid */
+  --line-hot:   #3A4663;   /* active borders */
+}
+
+@theme inline {
+  --color-surface-0: var(--surface-0);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+
+  --color-ink-hi: var(--ink-hi);
+  --color-ink-mid: var(--ink-mid);
+  --color-ink-lo: var(--ink-lo);
+
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-fault: var(--fault);
+  --color-info: var(--info);
+
+  --color-ok-glow: var(--ok-glow);
+  --color-warn-glow: var(--warn-glow);
+  --color-fault-glow: var(--fault-glow);
+
+  --color-line: var(--line);
+  --color-line-hot: var(--line-hot);
+
+  --font-sans: var(--font-ibm-plex-sans), sans-serif;
+  --font-mono: var(--font-ibm-plex-mono), monospace;
+  --font-display: var(--font-space-mono), monospace;
+}
+
+body {
+  background-color: var(--surface-0);
+  color: var(--ink-hi);
+  font-family: var(--font-ibm-plex-sans), sans-serif;
+}
+
+/* Tabular figures for number displays */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Keyframes for glowing alerts */
+@keyframes pulse-fault {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(242, 85, 90, 0.15), inset 0 0 8px rgba(242, 85, 90, 0.05);
+    border-color: rgba(242, 85, 90, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(242, 85, 90, 0.4), inset 0 0 15px rgba(242, 85, 90, 0.15);
+    border-color: rgba(242, 85, 90, 1);
+  }
+}
+
+@keyframes pulse-warn {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(242, 181, 68, 0.12), inset 0 0 6px rgba(242, 181, 68, 0.04);
+    border-color: rgba(242, 181, 68, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(242, 181, 68, 0.3), inset 0 0 12px rgba(242, 181, 68, 0.12);
+    border-color: rgba(242, 181, 68, 0.9);
+  }
+}
+
+@keyframes flow-dash {
+  to {
+    stroke-dashoffset: -40;
+  }
+}
+
+/* Custom CSS classes */
+.animate-fault-glow {
+  animation: pulse-fault 2.5s infinite ease-in-out;
+}
+
+.animate-warn-glow {
+  animation: pulse-warn 3s infinite ease-in-out;
+}
+
+.animate-flow-edge {
+  stroke-dasharray: 8 6;
+  animation: flow-dash 1.5s infinite linear;
+}
+
+.glassmorphism {
+  background: rgba(18, 22, 31, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--line);
+}
