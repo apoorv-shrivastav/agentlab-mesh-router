@@ -4,7 +4,7 @@
 
 AgentLab is an evaluation system for multi-step agent pipelines. It watches production traces, detects quality drift, and does the part nobody else automates: it **localizes the regression to the specific step that caused it**. From the real failing traces it drafts targeted evaluation cases; a human approves them; the fleet is re-scored against the enlarged suite; the degraded step is rerouted to a healthy agent.
 
-Built on Gemini 3.5 Flash. The demo pipeline genuinely spans three clouds — but, deliberately, none of the claims below depend on that.
+Built on Gemini 3.5 Flash. The demo pipeline genuinely spans three clouds.
 
 ---
 
