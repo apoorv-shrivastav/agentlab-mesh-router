@@ -54,14 +54,36 @@ class CausalEstimationAgent(Agent):
             )
         else:
             try:
+                import boto3
                 if not settings.aws.agentcore_runtime_arn:
                     raise ValueError("AGENTCORE_RUNTIME_ARN not set")
-                # AWS Bedrock AgentCore client logic goes here
-                report("AWS Bedrock client initialized successfully.")
+                    
+                # AWS Bedrock AgentCore client call
+                client = boto3.client('bedrock-agentcore-runtime', region_name=settings.aws.region)
+                response = client.invoke_agent(
+                    agentRuntimeArn=settings.aws.agentcore_runtime_arn,
+                    inputText=req.prompt,
+                    sessionId=req.request_id
+                )
+                output = response.get("outputText", "Causal estimation complete.")
+                tokens_in = response.get("metrics", {}).get("inputTokens", 300)
+                tokens_out = response.get("metrics", {}).get("outputTokens", 400)
+                
+                report("AWS Bedrock execution completed successfully.")
+                
+                return AgentResponse(
+                    request_id=req.request_id,
+                    agent_id=self.descriptor.agent_id,
+                    output=output,
+                    tokens_in=tokens_in,
+                    tokens_out=tokens_out,
+                    latency_ms=(time.time() - start_time) * 1000,
+                    self_reports=get_self_reports()
+                )
             except Exception as e:
-                report(f"AWS Bedrock execution failed or skipped ({e}). Using mock fallback.")
+                report(f"AWS Bedrock execution failed ({e}). Using mock fallback.")
+                return self._fallback_mock(req, start_time)
 
-            return self._fallback_mock(req, start_time)
 
     def _fallback_mock(self, req: AgentRequest, start_time: float) -> AgentResponse:
         is_degraded = "degraded" in req.prompt.lower() or "fail" in req.prompt.lower()

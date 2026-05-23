@@ -58,16 +58,44 @@ class ReadoutAgent(Agent):
             )
         else:
             try:
-                # Real Azure OpenAI implementation using official OpenAI SDK
+                import os
+                from openai import AzureOpenAI
                 if not settings.azure.openai_endpoint:
                     raise ValueError("AZURE_OPENAI_ENDPOINT not set")
-                # Retrieve key from environment or Secret Manager (here we assume it is loaded)
-                # client = AzureOpenAI(...)
-                report("Azure OpenAI client initialized successfully.")
+                api_key = os.getenv("AZURE_OPENAI_KEY")
+                if not api_key:
+                    raise ValueError("AZURE_OPENAI_KEY env var not set")
+                    
+                # Azure OpenAI client instantiation
+                client = AzureOpenAI(
+                    azure_endpoint=settings.azure.openai_endpoint,
+                    api_key=api_key,
+                    api_version="2024-02-15-preview"
+                )
+                response = client.chat.completions.create(
+                    model=settings.azure.openai_deployment,
+                    messages=[{"role": "user", "content": req.prompt}],
+                    temperature=0.7
+                )
+                output = response.choices[0].message.content
+                tokens_in = response.usage.prompt_tokens
+                tokens_out = response.usage.completion_tokens
+                
+                report("Azure OpenAI execution completed successfully.")
+                
+                return AgentResponse(
+                    request_id=req.request_id,
+                    agent_id=self.descriptor.agent_id,
+                    output=output,
+                    tokens_in=tokens_in,
+                    tokens_out=tokens_out,
+                    latency_ms=(time.time() - start_time) * 1000,
+                    self_reports=get_self_reports()
+                )
             except Exception as e:
-                report(f"Azure OpenAI client failed or skipped ({e}). Using mock fallback.")
+                report(f"Azure OpenAI client failed ({e}). Using mock fallback.")
+                return self._fallback_mock(req, start_time)
 
-            return self._fallback_mock(req, start_time)
 
     def _fallback_mock(self, req: AgentRequest, start_time: float) -> AgentResponse:
         is_degraded = "degraded" in req.prompt.lower() or "fail" in req.prompt.lower()
