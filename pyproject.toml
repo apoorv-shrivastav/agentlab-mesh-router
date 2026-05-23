@@ -23,8 +23,6 @@ dependencies = [
     "inspect-ai>=0.3.0",
     "hdbscan>=0.8.30",
     "umap-learn>=0.5.3",
-    "transformers>=4.30.0",
-    "torch>=2.0.0",
     "python-dotenv>=1.0.0"
 ]
 
@@ -32,6 +30,10 @@ dependencies = [
 dev = [
     "pytest>=7.0.0",
     "ruff>=0.1.0"
+]
+training = [
+    "torch>=2.0.0",
+    "transformers>=4.30.0"
 ]
 
 [tool.setuptools]

@@ -1,8 +1,6 @@
 import os
 import re
 from datetime import datetime
-import torch
-from transformers import DistilBertTokenizer, DistilBertForSequenceClassification
 from common.config import settings
 from common.schema import Signal
 
@@ -57,11 +55,17 @@ def load_model_and_tokenizer(kind: str):
         return None
         
     try:
+        import torch
+        from transformers import DistilBertTokenizer, DistilBertForSequenceClassification
+        
         tokenizer = DistilBertTokenizer.from_pretrained(model_path)
         model = DistilBertForSequenceClassification.from_pretrained(model_path)
         model.eval()
         _LOADED_MODELS[kind] = (model, tokenizer)
         return model, tokenizer
+    except ImportError:
+        print(f"[infer] Warning: torch or transformers not installed. Falling back to heuristics.")
+        return None
     except Exception as e:
         print(f"[infer] Warning: Failed to load real model for {kind}: {e}. Falling back to heuristics.")
         return None
@@ -93,6 +97,7 @@ def infer_signals(
             if resources is not None:
                 model, tokenizer = resources
                 try:
+                    import torch
                     inputs = tokenizer(
                         output,
                         return_tensors="pt",
