@@ -22,12 +22,13 @@ COPY triage ./triage
 COPY sentry ./sentry
 COPY orchestrator ./orchestrator
 COPY agents ./agents
+COPY harness ./harness
 
 # Build the virtualenv and install python dependencies
 RUN python3 -m venv .venv && \
     .venv/bin/pip install --no-cache-dir .
 
-# 3. Copy the rest of the application files (e.g. scripts, harness, agentlab.db)
+# 3. Copy the rest of the application files (e.g. scripts, agentlab.db)
 COPY . .
 
 # 4. Install Node dependencies and build the Next.js console
