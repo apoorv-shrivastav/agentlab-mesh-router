@@ -28,6 +28,39 @@
   --line-hot:   #3A4663;   /* active borders */
 }
 
+[data-theme="light"] {
+  /* Surfaces — clean, soft light grey layered for depth */
+  --surface-0:  #F7F8FA;   /* app background */
+  --surface-1:  #FFFFFF;   /* panel background */
+  --surface-2:  #EDEFF3;   /* raised card / node background */
+  --surface-3:  #E1E4EB;   /* hover / active raise */
+
+  /* Ink */
+  --ink-hi:     #1E2330;   /* primary text: near black */
+  --ink-mid:    #5F6B82;   /* secondary text: cool grey */
+  --ink-lo:     #8C99B0;   /* tertiary: light cool grey */
+
+  /* State — optimized for contrast on light backgrounds */
+  --ok:         #10B981;
+  --warn:       #D97706;
+  --fault:      #EF4444;
+  --info:       #3B82F6;
+
+  /* State glows — softer opacity for light background */
+  --ok-glow:    rgba(16, 185, 129, 0.12);
+  --warn-glow:  rgba(217, 119, 6, 0.12);
+  --fault-glow: rgba(239, 68, 68, 0.12);
+
+  /* Lines */
+  --line:       #DDE1EA;
+  --line-hot:   #C4CAD6;
+}
+
+[data-theme="light"] .soft-elevation {
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+}
+
+
 @theme inline {
   --color-surface-0: var(--surface-0);
   --color-surface-1: var(--surface-1);

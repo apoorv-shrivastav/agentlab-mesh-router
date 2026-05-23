@@ -39,7 +39,25 @@ const REASONING_LINES = [
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'pipeline' | 'triage' | 'pareto' | 'signals' | 'router' | 'end'>('pipeline');
   const [simState, setSimState] = useState<'healthy' | 'degraded' | 'triaging' | 'awaiting_approval' | 'rescoring' | 'recovered'>('healthy');
-  
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme') as 'dark' | 'light';
+    if (savedTheme) {
+      setTheme(savedTheme);
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const nextTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(nextTheme);
+    document.documentElement.setAttribute('data-theme', nextTheme);
+    localStorage.setItem('theme', nextTheme);
+  };
+
   const [dbData, setDbData] = useState<any>(null);
   const [activeClusterId, setActiveClusterId] = useState<string>('');
   
@@ -255,10 +273,29 @@ export default function Home() {
           )}
         </div>
 
-        {/* Loop state indicator */}
-        <div className="flex items-center gap-2 font-sans text-xs text-ink-lo bg-surface-2 px-3 py-1 rounded border border-line">
-          <span>loopState:</span>
-          <span className="text-info font-semibold font-mono tracking-wide">{getLoopStateText()}</span>
+        {/* Loop state indicator and Theme Toggle */}
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 font-sans text-xs text-ink-lo bg-surface-2 px-3 py-1 rounded border border-line">
+            <span>loopState:</span>
+            <span className="text-info font-semibold font-mono tracking-wide">{getLoopStateText()}</span>
+          </div>
+
+          <button
+            onClick={toggleTheme}
+            className="flex items-center justify-center p-2 rounded-md border border-line bg-surface-2 text-ink-mid hover:text-ink-hi hover:bg-surface-3 transition-all cursor-pointer shadow-sm"
+            title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            aria-label="Toggle Theme"
+          >
+            {theme === 'dark' ? (
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.364 17.636l-.707.707M17.636 17.636l-.707-.707M6.364 6.364l-.707-.707M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            ) : (
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+              </svg>
+            )}
+          </button>
         </div>
       </header>
 
