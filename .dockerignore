@@ -1,0 +1,9 @@
+.git
+.venv
+node_modules
+console/node_modules
+console/.next
+.pytest_cache
+.ruff_cache
+__pycache__
+*.pyc
