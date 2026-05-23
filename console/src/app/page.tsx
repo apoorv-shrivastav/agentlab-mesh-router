@@ -266,7 +266,7 @@ export default function Home() {
         
         {/* 2. Left Rail Sidebar */}
         <aside className="w-64 border-r border-line bg-surface-1 flex flex-col justify-between p-4">
-          <nav className="space-y-1">
+          <nav className="space-y-2">
             {[
               { id: 'pipeline', label: 'Pipeline', icon: 'M4 6h16M4 12h16M4 18h16' },
               { id: 'triage', label: 'Triage', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01' },
@@ -279,11 +279,11 @@ export default function Home() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
-                  className={`flex items-center w-full gap-3 px-3 py-2.5 text-sm rounded font-medium transition-colors relative group ${
+                  className={`flex items-center w-full gap-2 px-4 py-2 text-sm rounded-md font-medium transition-colors relative group ${
                     active ? 'text-ink-hi bg-surface-2' : 'text-ink-mid hover:text-ink-hi hover:bg-surface-2/50'
                   }`}
                 >
-                  {active && <span className="absolute left-0 top-1 bottom-1 w-1 bg-ok rounded-r" />}
+                  {active && <span className="absolute left-0 top-1 bottom-1 w-1 bg-ok rounded-r-md" />}
                   <svg className={`w-4 h-4 transition-colors ${active ? 'text-ok' : 'text-ink-lo group-hover:text-ink-mid'}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d={tab.icon} />
                   </svg>
@@ -297,7 +297,7 @@ export default function Home() {
           </nav>
 
           {/* Floating Demo Control Panel inside Sidebar */}
-          <div className="p-4 rounded border border-line bg-surface-0/60 space-y-3 shadow-inner">
+          <div className="p-4 rounded-xl border border-line bg-surface-0/60 space-y-4 shadow-inner">
             <div className="font-display text-[10px] text-ink-lo uppercase tracking-widest font-bold">
               Simulation Deck
             </div>
@@ -305,7 +305,7 @@ export default function Home() {
             <button
               onClick={triggerFailure}
               disabled={isDegraded}
-              className={`w-full text-xs font-display py-2 px-3 rounded border font-semibold transition-all ${
+              className={`w-full text-xs font-display py-2.5 px-4 rounded-md border font-semibold transition-all ${
                 isDegraded
                   ? 'border-line text-ink-lo cursor-not-allowed bg-surface-1'
                   : 'border-fault/40 text-fault bg-fault/5 hover:bg-fault/20 hover:border-fault'
@@ -316,7 +316,7 @@ export default function Home() {
 
             <button
               onClick={resetState}
-              className="w-full text-xs font-display py-2 px-3 rounded border border-line text-ink-mid hover:text-ink-hi hover:bg-surface-3 transition-all"
+              className="w-full text-xs font-display py-2.5 px-4 rounded-md border border-line text-ink-mid hover:text-ink-hi hover:bg-surface-3 transition-all"
             >
               Force Reset System
             </button>
@@ -324,90 +324,98 @@ export default function Home() {
         </aside>
 
         {/* 3. Main Workspace Area */}
-        <main className="flex-1 overflow-y-auto p-8 flex flex-col justify-start">
+        <main className="flex-1 relative overflow-hidden bg-surface-0">
           
           {/* TAB 1: PIPELINE VIEW */}
-          {activeTab === 'pipeline' && (
-            <div className="space-y-8 flex flex-col justify-center items-center py-6">
-              <div className="w-full max-w-4xl">
-                <h2 className="text-xl font-display font-bold text-ink-hi flex items-center gap-2">
-                  <span>Routing Flow Architecture</span>
-                  <span className="text-xs text-ink-lo font-sans font-normal border border-line px-1.5 py-0.5 rounded uppercase">Live Topology</span>
-                </h2>
-                <p className="text-xs text-ink-mid mt-1">
-                  Visualization of distributed workflow nodes. Warning edges represent data pollution propagation.
-                </p>
-              </div>
+          <div className={`absolute inset-0 p-8 overflow-y-auto transition-all duration-300 ease-out flex flex-col items-center justify-start ${
+            activeTab === 'pipeline' ? 'opacity-100 translate-y-0 z-10 visible' : 'opacity-0 translate-y-4 pointer-events-none z-0 invisible'
+          }`}>
+            <div className="w-full max-w-4xl mb-6">
+              <h2 className="text-xl font-display font-bold text-ink-hi flex items-center gap-2">
+                <span>Routing Flow Architecture</span>
+                <span className="text-xs text-ink-lo font-sans font-normal border border-line px-1.5 py-0.5 rounded-md uppercase">Live Topology</span>
+              </h2>
+              <p className="text-xs text-ink-mid mt-1 font-sans">
+                Visualization of distributed workflow nodes. Warning edges represent data pollution propagation.
+              </p>
+            </div>
 
-              {/* Node diagram workspace */}
-              <div className="w-[900px] h-[330px] relative border border-line bg-surface-1/40 rounded-xl overflow-hidden p-6 shadow-2xl">
-                {/* SVG Connecting Flow Lines */}
-                <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 0 }}>
-                  <defs>
-                    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="var(--line)" />
-                    </marker>
-                    <marker id="arrow-warn" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="var(--warn)" />
-                    </marker>
-                  </defs>
+            {/* Node diagram workspace */}
+            <div className="w-[896px] h-[384px] relative border border-line bg-surface-1/40 rounded-xl overflow-hidden p-6 shadow-2xl flex-shrink-0">
+              {/* SVG Connecting Flow Lines */}
+              <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 0 }}>
+                <defs>
+                  <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="var(--line)" />
+                  </marker>
+                  <marker id="arrow-warn" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="var(--warn)" />
+                  </marker>
+                </defs>
 
-                  {/* Flow 1: Data Prep to Causal */}
-                  <path
-                    d="M 240 100 L 330 100"
-                    stroke="var(--line)"
-                    strokeWidth="2.5"
-                    fill="none"
-                    markerEnd="url(#arrow)"
-                  />
+                {/* Flow 1: Data Prep to Causal */}
+                <path
+                  d="M 249 112 L 329 112"
+                  stroke="var(--line)"
+                  strokeWidth="2.5"
+                  fill="none"
+                  markerEnd="url(#arrow)"
+                />
 
-                  {/* Flow 2: Causal to Readout */}
-                  <path
-                    d="M 570 100 L 660 100"
-                    stroke={isDegraded ? 'var(--warn)' : simState === 'rescoring' ? 'var(--warn)' : 'var(--line)'}
-                    strokeWidth="3.5"
-                    fill="none"
-                    className={isDegraded || simState === 'rescoring' ? 'animate-flow-edge' : ''}
-                    markerEnd={isDegraded || simState === 'rescoring' ? 'url(#arrow-warn)' : 'url(#arrow)'}
-                  />
-                </svg>
+                {/* Flow 2: Causal to Readout */}
+                <path
+                  d="M 561 112 L 641 112"
+                  stroke={isDegraded ? 'var(--warn)' : simState === 'rescoring' ? 'var(--warn)' : 'var(--line)'}
+                  strokeWidth="3.5"
+                  fill="none"
+                  className={isDegraded || simState === 'rescoring' ? 'animate-flow-edge' : ''}
+                  markerEnd={isDegraded || simState === 'rescoring' ? 'url(#arrow-warn)' : 'url(#arrow)'}
+                />
+              </svg>
 
-                {/* Node 1: DATA PREP */}
-                <div className="absolute left-[30px] top-[24px] w-[210px] glassmorphism bg-surface-2 border border-line rounded-lg p-4 shadow-lg flex flex-col justify-between">
+              {/* Node 1: DATA PREP */}
+              <div className="absolute left-[24px] top-[24px] w-[224px] h-[176px] glassmorphism bg-surface-2 border border-line rounded-xl p-4 shadow-lg flex flex-col justify-between transition-all duration-500">
+                <div>
                   <div className="flex items-center justify-between mb-2">
                     <span className="font-display font-bold text-xs tracking-wider text-ink-hi">DATA PREP</span>
-                    <span className="text-[10px] text-[#3DD68C] font-mono border border-[#3DD68C]/20 bg-[#3DD68C]/5 px-1.5 py-0.5 rounded font-semibold uppercase">● GCP</span>
+                    <span className="text-[10px] text-ok font-mono border border-ok/20 bg-ok/5 px-1.5 py-0.5 rounded-md font-semibold uppercase">● GCP</span>
                   </div>
-                  <div className="text-[10px] text-ink-lo font-mono mb-3">agent: data-prep</div>
-                  
-                  {/* Mini-metrics */}
-                  <div className="grid grid-cols-3 gap-1 border-t border-line/45 pt-3 font-mono">
-                    <div className="text-center">
-                      <div className="text-[10px] text-ink-lo">passRate</div>
-                      <div className="text-xs text-ok font-semibold tabular-nums">{getMetrics('data-prep').q.toFixed(2)}</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-[10px] text-ink-lo">queryCost</div>
-                      <div className="text-xs text-ink-mid tabular-nums">${getMetrics('data-prep').cost.toFixed(3)}</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-[10px] text-ink-lo">latency</div>
-                      <div className="text-xs text-ink-mid tabular-nums">{getMetrics('data-prep').latency}ms</div>
-                    </div>
+                  <div className="flex justify-between items-center text-[10px] font-mono mb-2">
+                    <span className="text-ink-lo">agent:</span>
+                    <span className="text-ink-mid font-semibold">data-prep</span>
+                  </div>
+                  <div className="h-7 mb-2" /> {/* spacer to align metrics perfectly */}
+                </div>
+                
+                {/* Mini-metrics */}
+                <div className="grid grid-cols-3 gap-2 border-t border-line/45 pt-3 font-mono">
+                  <div className="text-center">
+                    <div className="text-[10px] text-ink-mid font-sans font-medium">passRate</div>
+                    <div className="text-xs text-ok font-semibold tabular-nums mt-0.5">{getMetrics('data-prep').q.toFixed(2)}</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-[10px] text-ink-mid font-sans font-medium">queryCost</div>
+                    <div className="text-xs text-ink-mid tabular-nums mt-0.5">${getMetrics('data-prep').cost.toFixed(3)}</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-[10px] text-ink-mid font-sans font-medium">latency</div>
+                    <div className="text-xs text-ink-mid tabular-nums mt-0.5">{getMetrics('data-prep').latency}ms</div>
                   </div>
                 </div>
+              </div>
 
-                {/* Node 2: CAUSAL ESTIMATION (THE CAUSE) */}
-                <div className={`absolute left-[345px] top-[24px] w-[210px] bg-surface-2 border rounded-lg p-4 shadow-lg flex flex-col justify-between transition-all duration-500 ${
-                  isDegraded 
-                    ? 'border-fault animate-fault-glow'
-                    : simState === 'rescoring'
-                    ? 'border-warn animate-warn-glow'
-                    : 'border-line'
-                }`}>
+              {/* Node 2: CAUSAL ESTIMATION (THE CAUSE) */}
+              <div className={`absolute left-[336px] top-[24px] w-[224px] h-[176px] bg-surface-2 border rounded-xl p-4 shadow-lg flex flex-col justify-between transition-all duration-500 ${
+                isDegraded 
+                  ? 'border-fault animate-fault-glow'
+                  : simState === 'rescoring'
+                  ? 'border-warn animate-warn-glow'
+                  : 'border-line'
+              }`}>
+                <div>
                   <div className="flex items-center justify-between mb-2">
                     <span className="font-display font-bold text-xs tracking-wider text-ink-hi">CAUSAL EST.</span>
-                    <span className={`text-[10px] font-mono border px-1.5 py-0.5 rounded font-semibold uppercase ${
+                    <span className={`text-[10px] font-mono border px-1.5 py-0.5 rounded-md font-semibold uppercase transition-all duration-500 ${
                       simState === 'recovered'
                         ? 'text-ok border-ok/20 bg-ok/5'
                         : isDegraded
@@ -418,138 +426,168 @@ export default function Home() {
                     </span>
                   </div>
                   
-                  <div className="flex justify-between items-center text-[10px] font-mono mb-3">
+                  <div className="flex justify-between items-center text-[10px] font-mono mb-2">
                     <span className="text-ink-lo">agent:</span>
-                    <span className={`font-semibold ${simState === 'recovered' ? 'text-ok' : isDegraded ? 'text-fault' : 'text-ink-mid'}`}>
+                    <span className={`font-semibold transition-colors duration-500 ${simState === 'recovered' ? 'text-ok' : isDegraded ? 'text-fault' : 'text-ink-mid'}`}>
                       {simState === 'recovered' ? 'causal-estimation-spare' : 'causal-estimation'}
                     </span>
                   </div>
 
-                  {/* Mini-metrics */}
-                  <div className="grid grid-cols-3 gap-1 border-t border-line/45 pt-3 font-mono">
-                    <div className="text-center">
-                      <div className="text-[10px] text-ink-lo">passRate</div>
-                      <div className={`text-xs font-semibold tabular-nums ${isDegraded ? 'text-fault' : simState === 'rescoring' ? 'text-warn' : 'text-ok'}`}>
-                        {getMetrics('causal').q.toFixed(2)}
-                      </div>
+                  {isDegraded ? (
+                    <div className="mb-2 text-[9px] font-display font-bold px-2 py-0.5 rounded-md bg-fault/10 text-fault border border-fault/20 tracking-wider text-center uppercase animate-pulse">
+                      out of bounds ATE
                     </div>
-                    <div className="text-center">
-                      <div className="text-[10px] text-ink-lo">queryCost</div>
-                      <div className="text-xs text-ink-mid tabular-nums">${getMetrics('causal').cost.toFixed(3)}</div>
+                  ) : simState === 'rescoring' ? (
+                    <div className="mb-2 text-[9px] font-display font-bold px-2 py-0.5 rounded-md bg-warn/10 text-warn border border-warn/20 tracking-wider text-center uppercase animate-pulse">
+                      eval re-scoring
                     </div>
-                    <div className="text-center">
-                      <div className="text-[10px] text-ink-lo">latency</div>
-                      <div className="text-xs text-ink-mid tabular-nums">{getMetrics('causal').latency}ms</div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Node 3: READOUT (THE SYMPTOM) */}
-                <div className={`absolute left-[660px] top-[24px] w-[210px] bg-surface-2 border rounded-lg p-4 shadow-lg flex flex-col justify-between transition-all duration-500 ${
-                  isDegraded 
-                    ? 'border-warn animate-warn-glow'
-                    : 'border-line'
-                }`}>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-display font-bold text-xs tracking-wider text-ink-hi">READOUT</span>
-                    <span className="text-[10px] text-info font-mono border border-info/20 bg-info/5 px-1.5 py-0.5 rounded font-semibold uppercase">● Azure</span>
-                  </div>
-                  <div className="text-[10px] text-ink-lo font-mono mb-3">agent: readout</div>
-
-                  {/* Contamination Label */}
-                  {isDegraded && (
-                    <div className="absolute -top-3 right-3 text-[9px] font-display font-bold px-2 py-0.5 rounded bg-warn text-surface-0 animate-bounce tracking-tight shadow">
-                      input from CAUSAL ↑
-                    </div>
+                  ) : (
+                    <div className="h-7 mb-2" />
                   )}
-
-                  {/* Mini-metrics */}
-                  <div className="grid grid-cols-3 gap-1 border-t border-line/45 pt-3 font-mono">
-                    <div className="text-center">
-                      <div className="text-[10px] text-ink-lo">passRate</div>
-                      <div className={`text-xs font-semibold tabular-nums ${isDegraded ? 'text-warn' : 'text-ok'}`}>
-                        {getMetrics('readout').q.toFixed(2)}
-                      </div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-[10px] text-ink-lo">queryCost</div>
-                      <div className="text-xs text-ink-mid tabular-nums">${getMetrics('readout').cost.toFixed(3)}</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-[10px] text-ink-lo">latency</div>
-                      <div className="text-xs text-ink-mid tabular-nums">{getMetrics('readout').latency}ms</div>
-                    </div>
-                  </div>
                 </div>
 
-                {/* Persistent Causal Lift Slider widget in bottom rail */}
-                <div className="absolute left-[30px] bottom-[24px] right-[30px] h-20 bg-surface-2 border border-line rounded-lg p-3 flex flex-col justify-center">
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="font-display font-bold text-[10px] tracking-wide text-ink-mid">
-                      ATE EFFECT ESTIMATE MONITOR
-                    </span>
-                    <div className="font-mono text-xs">
-                      <span>bounds constraint: </span>
-                      <span className="text-ok font-semibold">[0.0%, 10.0%]</span>
+                {/* Mini-metrics */}
+                <div className="grid grid-cols-3 gap-2 border-t border-line/45 pt-3 font-mono">
+                  <div className="text-center">
+                    <div className="text-[10px] text-ink-mid font-sans font-medium">passRate</div>
+                    <div className={`text-xs font-semibold tabular-nums mt-0.5 ${isDegraded ? 'text-fault' : simState === 'rescoring' ? 'text-warn' : 'text-ok'}`}>
+                      {getMetrics('causal').q.toFixed(2)}
                     </div>
                   </div>
-
-                  {/* Gauge bar */}
-                  <div className="relative w-full h-4 bg-surface-0 border border-line rounded overflow-hidden flex items-center">
-                    {/* Healthy region background block */}
-                    <div className="absolute left-0 top-0 bottom-0 w-[20%] bg-ok-glow border-r border-ok/30" />
-                    
-                    {/* Estimate cursor dot */}
-                    <div 
-                      className="absolute transition-all duration-300 w-3 h-3 rounded-full border shadow flex items-center justify-center transform -translate-x-1.5"
-                      style={{ 
-                        left: `${Math.min(97, Math.max(3, (effectEstimate / 50) * 100))}%`,
-                        backgroundColor: effectEstimate > 10 ? 'var(--fault)' : 'var(--ok)',
-                        borderColor: effectEstimate > 10 ? '#FFF' : '#FFF',
-                        boxShadow: effectEstimate > 10 ? '0 0 10px var(--fault)' : '0 0 10px var(--ok)'
-                      }}
-                    />
-
-                    {/* Scale markers */}
-                    <div className="absolute left-[20%] top-0 bottom-0 border-l border-dashed border-ink-lo/30 pointer-events-none" />
-                    <div className="absolute left-[50%] top-0 bottom-0 border-l border-dashed border-ink-lo/30 pointer-events-none" />
-                    <div className="absolute left-[80%] top-0 bottom-0 border-l border-dashed border-ink-lo/30 pointer-events-none" />
+                  <div className="text-center">
+                    <div className="text-[10px] text-ink-mid font-sans font-medium">queryCost</div>
+                    <div className="text-xs text-ink-mid tabular-nums mt-0.5">${getMetrics('causal').cost.toFixed(3)}</div>
                   </div>
-
-                  {/* Value tags below progress track */}
-                  <div className="flex justify-between text-[9px] font-mono text-ink-lo mt-1">
-                    <span>0% (no-effect)</span>
-                    <span className="text-ok">10% (max threshold)</span>
-                    <span>25%</span>
-                    <span>50%</span>
-                  </div>
-
-                  {/* Digital read-out overlay */}
-                  <div className="absolute right-6 top-3 flex items-center gap-1">
-                    <span className="text-[10px] text-ink-lo font-sans">ATE:</span>
-                    <span 
-                      className={`font-display text-base font-bold tabular-nums tracking-tight ${
-                        effectEstimate > 10 ? 'text-fault animate-pulse' : 'text-ok'
-                      }`}
-                    >
-                      {effectEstimate >= 0 ? `+${effectEstimate.toFixed(1)}%` : `${effectEstimate.toFixed(1)}%`}
-                    </span>
+                  <div className="text-center">
+                    <div className="text-[10px] text-ink-mid font-sans font-medium">latency</div>
+                    <div className="text-xs text-ink-mid tabular-nums mt-0.5">{getMetrics('causal').latency}ms</div>
                   </div>
                 </div>
               </div>
+
+              {/* Node 3: READOUT (THE SYMPTOM) */}
+              <div className={`absolute left-[648px] top-[24px] w-[224px] h-[176px] bg-surface-2 border rounded-xl p-4 shadow-lg flex flex-col justify-between transition-all duration-500 ${
+                isDegraded 
+                  ? 'border-warn animate-warn-glow'
+                  : 'border-line'
+              }`}>
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-display font-bold text-xs tracking-wider text-ink-hi">READOUT</span>
+                    <span className="text-[10px] text-info font-mono border border-info/20 bg-info/5 px-1.5 py-0.5 rounded-md font-semibold uppercase">● Azure</span>
+                  </div>
+                  <div className="flex justify-between items-center text-[10px] font-mono mb-2">
+                    <span className="text-ink-lo">agent:</span>
+                    <span className="text-ink-mid font-semibold">readout</span>
+                  </div>
+
+                  {isDegraded ? (
+                    <div className="mb-2 text-[9px] font-display font-bold px-2 py-0.5 rounded-md bg-warn/10 text-warn border border-warn/20 tracking-wider text-center uppercase">
+                      input from CAUSAL ↑
+                    </div>
+                  ) : (
+                    <div className="h-7 mb-2" />
+                  )}
+                </div>
+
+                {/* Mini-metrics */}
+                <div className="grid grid-cols-3 gap-2 border-t border-line/45 pt-3 font-mono">
+                  <div className="text-center">
+                    <div className="text-[10px] text-ink-mid font-sans font-medium">passRate</div>
+                    <div className={`text-xs font-semibold tabular-nums mt-0.5 ${isDegraded ? 'text-warn' : 'text-ok'}`}>
+                      {getMetrics('readout').q.toFixed(2)}
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-[10px] text-ink-mid font-sans font-medium">queryCost</div>
+                    <div className="text-xs text-ink-mid tabular-nums mt-0.5">${getMetrics('readout').cost.toFixed(3)}</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-[10px] text-ink-mid font-sans font-medium">latency</div>
+                    <div className="text-xs text-ink-mid tabular-nums mt-0.5">{getMetrics('readout').latency}ms</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Persistent Causal Lift Slider widget in bottom rail */}
+              <div className="absolute left-[24px] bottom-[24px] right-[24px] bg-surface-2 border border-line rounded-xl p-4 flex flex-col gap-3 shadow-lg">
+                {/* Row 1: Labels */}
+                <div className="flex justify-between items-center">
+                  <span className="font-display font-bold text-[10px] tracking-wide text-ink-mid">
+                    ATE EFFECT ESTIMATE MONITOR
+                  </span>
+                  <div className="font-mono text-xs text-ink-lo flex items-center gap-1.5">
+                    <span>bounds constraint:</span>
+                    <span className="text-ok font-semibold border border-ok/20 bg-ok/5 px-1.5 py-0.5 rounded-md">[0.0%, 10.0%]</span>
+                  </div>
+                </div>
+
+                {/* Row 2: The Bar */}
+                <div className="relative w-full h-5 bg-surface-0 border border-line rounded-md overflow-hidden flex items-center">
+                  {/* Healthy region background block */}
+                  <div className="absolute left-0 top-0 bottom-0 w-[20%] bg-[#3DD68C]/5 border-r border-[#3DD68C]/20" />
+                  
+                  {/* Scale markers */}
+                  <div className="absolute left-[20%] top-0 bottom-0 border-l border-dashed border-ink-lo/30 pointer-events-none" />
+                  <div className="absolute left-[50%] top-0 bottom-0 border-l border-dashed border-ink-lo/30 pointer-events-none" />
+                  <div className="absolute left-[80%] top-0 bottom-0 border-l border-dashed border-ink-lo/30 pointer-events-none" />
+
+                  {/* Estimate cursor dot */}
+                  <div 
+                    className="absolute transition-all duration-[1200ms] ease-out w-3.5 h-3.5 rounded-full border shadow flex items-center justify-center transform -translate-x-1.5"
+                    style={{ 
+                      left: `${Math.min(97, Math.max(3, (effectEstimate / 50) * 100))}%`,
+                      backgroundColor: effectEstimate > 10 ? 'var(--fault)' : 'var(--ok)',
+                      borderColor: '#FFF',
+                      boxShadow: effectEstimate > 10 ? '0 0 10px var(--fault)' : '0 0 10px var(--ok)'
+                    }}
+                  />
+                </div>
+
+                {/* Row 3: Axis Ticks */}
+                <div className="flex justify-between text-[9px] font-mono text-ink-lo px-1">
+                  <span>0% (no-effect)</span>
+                  <span className="text-ok">10% (max threshold)</span>
+                  <span>25%</span>
+                  <span>50%</span>
+                </div>
+
+                {/* Row 4: Readout */}
+                <div className="flex items-center gap-3 border-t border-line/45 pt-2.5">
+                  <span className="font-mono text-xs text-ink-lo">current estimate:</span>
+                  <span 
+                    className={`font-mono text-xl font-bold tabular-nums tracking-tight transition-colors duration-500 ${
+                      effectEstimate > 10 ? 'text-fault' : 'text-ok'
+                    }`}
+                  >
+                    {effectEstimate >= 0 ? `+${effectEstimate.toFixed(1)}%` : `${effectEstimate.toFixed(1)}%`}
+                  </span>
+                  <span 
+                    className={`text-[10px] font-display font-bold px-2 py-0.5 rounded-md tracking-wide uppercase transition-all duration-500 ${
+                      effectEstimate > 10 
+                        ? 'bg-fault/10 text-fault border border-fault/20 animate-pulse' 
+                        : 'bg-ok/10 text-ok border border-ok/20'
+                    }`}
+                  >
+                    ● {effectEstimate > 10 ? 'out of bounds' : 'within bounds'}
+                  </span>
+                </div>
+              </div>
             </div>
-          )}
+          </div>
 
           {/* TAB 2: TRIAGE VIEW */}
-          {activeTab === 'triage' && (
+          <div className={`absolute inset-0 p-8 overflow-y-auto transition-all duration-300 ease-out ${
+            activeTab === 'triage' ? 'opacity-100 translate-y-0 z-10 visible' : 'opacity-0 translate-y-4 pointer-events-none z-0 invisible'
+          }`}>
             <div className="space-y-6 max-w-4xl mx-auto w-full">
               <h2 className="text-xl font-display font-bold text-ink-hi flex items-center gap-2">
                 <span>Autonomous Triage Workspace</span>
-                <span className="text-xs text-ink-lo font-sans font-normal border border-line px-1.5 py-0.5 rounded uppercase">Reasoning & Action</span>
+                <span className="text-xs text-ink-lo font-sans font-normal border border-line px-1.5 py-0.5 rounded-md uppercase">Reasoning & Action</span>
               </h2>
 
               {/* Streaming Terminal */}
-              <div className="bg-black/40 border border-line rounded-lg overflow-hidden shadow-2xl flex flex-col">
+              <div className="bg-black/40 border border-line rounded-xl overflow-hidden shadow-2xl flex flex-col">
                 <div className="flex items-center justify-between bg-surface-2 border-b border-line px-4 py-2">
                   <div className="flex items-center gap-1.5">
                     <span className="w-2.5 h-2.5 rounded-full bg-fault" />
@@ -593,18 +631,18 @@ export default function Home() {
 
               {/* Verdict Card */}
               {isDegraded && (simState === 'awaiting_approval' || simState === 'triaging') && (
-                <div className="border border-fault bg-fault/5 rounded-lg p-6 space-y-4 shadow-xl animate-fade-in">
+                <div className="border border-fault bg-fault/5 rounded-xl p-6 space-y-4 shadow-xl animate-fade-in">
                   <div className="flex items-center justify-between border-b border-fault/20 pb-3">
                     <span className="font-display font-bold text-sm tracking-wider text-fault uppercase">
                       ▲ FAULT LOCALIZED & ISOLATED
                     </span>
-                    <span className="text-[10px] font-mono text-ink-lo bg-surface-2 px-2 py-0.5 rounded border border-line">
+                    <span className="text-[10px] font-mono text-ink-lo bg-surface-2 px-2 py-0.5 rounded-md border border-line">
                       run: {dbData?.triage_clusters?.[0]?.cluster_id || 'cluster-4a8f9c'}
                     </span>
                   </div>
 
                   <div className="grid grid-cols-2 gap-6 py-2">
-                    <div className="flex items-center gap-4 bg-surface-1 border border-line rounded p-4">
+                    <div className="flex items-center gap-4 bg-surface-1 border border-line rounded-xl p-4">
                       <span className="text-xs font-mono text-ink-lo w-16">CAUSE:</span>
                       <div className="flex flex-col">
                         <span className="font-display font-bold text-sm text-fault">CAUSAL ESTIMATION</span>
@@ -612,7 +650,7 @@ export default function Home() {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-4 bg-surface-1 border border-line rounded p-4">
+                    <div className="flex items-center gap-4 bg-surface-1 border border-line rounded-xl p-4">
                       <span className="text-xs font-mono text-ink-lo w-16">SYMPTOM:</span>
                       <div className="flex flex-col">
                         <span className="font-display font-bold text-sm text-warn">READOUT</span>
@@ -635,7 +673,7 @@ export default function Home() {
                   </div>
 
                   {/* Actions / Approve Tasks */}
-                  <div className="bg-surface-2 border border-line rounded-lg p-5 mt-4 space-y-4">
+                  <div className="bg-surface-2 border border-line rounded-xl p-4 mt-4 space-y-4">
                     <div className="flex items-center justify-between border-b border-line/45 pb-3">
                       <div className="flex flex-col">
                         <span className="font-display font-bold text-xs tracking-wider text-ink-hi">
@@ -645,7 +683,7 @@ export default function Home() {
                           human review required — triage proposes, you dispose
                         </span>
                       </div>
-                      <span className="text-[9px] font-mono bg-info/10 text-info border border-info/20 px-2 py-0.5 rounded tracking-wide font-bold uppercase">
+                      <span className="text-[9px] font-mono bg-info/10 text-info border border-info/20 px-2 py-0.5 rounded-md tracking-wide font-bold uppercase">
                         3 Drafted
                       </span>
                     </div>
@@ -656,7 +694,7 @@ export default function Home() {
                         { title: 'Covariate Covariance Variance', desc: 'Verifies CUPED adjustment does not introduce variance regressions' },
                         { title: 'Readout Contamination Filter', desc: 'Evaluates memo agent behavior when presented with out-of-bound inputs' }
                       ].map((t, idx) => (
-                        <div key={idx} className="flex items-start gap-3 bg-surface-1/40 p-2.5 rounded border border-line/40 text-xs">
+                        <div key={idx} className="flex items-start gap-3 bg-surface-1/40 p-4 rounded-xl border border-line/40 text-xs">
                           <span className="font-mono text-info font-semibold">0{idx+1}.</span>
                           <div>
                             <div className="font-bold text-ink-hi">{t.title}</div>
@@ -669,7 +707,7 @@ export default function Home() {
                     <div className="flex justify-end gap-3 pt-3">
                       <button 
                         onClick={approveTriage}
-                        className="font-display text-xs font-bold text-surface-0 bg-ok hover:bg-[#2fc47d] border border-ok px-6 py-2.5 rounded transition-all shadow-lg active:scale-95"
+                        className="font-display text-xs font-bold text-surface-0 bg-ok hover:bg-[#2fc47d] border border-ok px-6 py-2.5 rounded-md transition-all shadow-lg active:scale-95"
                       >
                         Approve & Rollout Tasks
                       </button>
@@ -680,40 +718,42 @@ export default function Home() {
 
               {/* Safe state summary if healthy */}
               {!isDegraded && (
-                <div className="border border-line bg-surface-1/30 rounded-lg p-12 text-center space-y-3">
+                <div className="border border-line bg-surface-1/30 rounded-xl p-12 text-center space-y-3">
                   <div className="w-12 h-12 rounded-full bg-ok/10 border border-ok/30 flex items-center justify-center mx-auto text-ok font-bold text-lg">
                     ✓
                   </div>
                   <h3 className="font-display font-bold text-sm text-ink-hi">System Stable</h3>
-                  <p className="text-xs text-ink-mid max-w-sm mx-auto">
+                  <p className="text-xs text-ink-mid max-w-sm mx-auto font-sans">
                     All components are within statistical control thresholds. Autonomous triage is idle.
                   </p>
                 </div>
               )}
             </div>
-          )}
+          </div>
 
           {/* TAB 3: PARETO VIEW */}
-          {activeTab === 'pareto' && (
+          <div className={`absolute inset-0 p-8 overflow-y-auto transition-all duration-300 ease-out ${
+            activeTab === 'pareto' ? 'opacity-100 translate-y-0 z-10 visible' : 'opacity-0 translate-y-4 pointer-events-none z-0 invisible'
+          }`}>
             <div className="space-y-6 max-w-4xl mx-auto w-full">
               <div className="flex justify-between items-start">
                 <div>
                   <h2 className="text-xl font-display font-bold text-ink-hi flex items-center gap-2">
                     <span>Multi-Agent Pareto Optimization</span>
-                    <span className="text-xs text-ink-lo font-sans font-normal border border-line px-1.5 py-0.5 rounded uppercase">Efficiency Frontier</span>
+                    <span className="text-xs text-ink-lo font-sans font-normal border border-line px-1.5 py-0.5 rounded-md uppercase">Efficiency Frontier</span>
                   </h2>
-                  <p className="text-xs text-ink-mid mt-1">
+                  <p className="text-xs text-ink-mid mt-1 font-sans">
                     Comparative trade-off curves showing cost vs execution quality across baseline and learned router policies.
                   </p>
                 </div>
                 
-                <div className="bg-surface-2 border border-line px-3 py-1.5 rounded flex items-center gap-4 text-xs font-mono">
+                <div className="bg-surface-2 border border-line px-3 py-1.5 rounded-md flex items-center gap-4 text-xs font-mono">
                   <div className="flex items-center gap-1.5">
                     <span className="w-2.5 h-0.5 bg-ink-mid inline-block border-t border-dashed" />
                     <span className="text-ink-lo">Baseline</span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <span className="w-3.5 h-1 bg-ok inline-block rounded" />
+                    <span className="w-3.5 h-1 bg-ok inline-block rounded-md" />
                     <span className="text-ok font-bold">Learned Router</span>
                   </div>
                 </div>
@@ -752,7 +792,6 @@ export default function Home() {
                   <text x="310" y="340" fill="var(--ink-mid)" className="font-sans text-[10px] tracking-wider uppercase font-bold" textAnchor="middle">API Query Cost per Request ($)</text>
 
                   {/* Baseline Curve (Dashed, Muted Ink) */}
-                  {/* Points: M 140 228 (0.005, 0.62) -> L 240 172 (0.010, 0.78) -> L 340 124 (0.015, 0.86) -> L 440 100 (0.020, 0.90) -> L 520 82 (0.028, 0.93) */}
                   <path
                     d="M 140 228 L 240 172 L 340 124 L 440 100 L 520 82"
                     fill="none"
@@ -768,7 +807,6 @@ export default function Home() {
                   <circle cx="520" cy="82" r="3.5" fill="var(--ink-lo)" />
 
                   {/* Learned Curve (Green, Glowing, Animated) */}
-                  {/* Points: M 100 172 (0.003, 0.78) -> L 160 94 (0.006, 0.91) -> L 240 70 (0.010, 0.95) -> L 340 58 (0.015, 0.97) -> L 480 52 (0.022, 0.98) */}
                   <path
                     d="M 100 172 L 160 94 L 240 70 L 340 58 L 480 52"
                     fill="none"
@@ -794,7 +832,7 @@ export default function Home() {
                       <circle cx="160" cy="94" r="7" fill="none" stroke="var(--info)" strokeWidth="1" className="animate-ping" />
                       
                       {/* Callout Tag */}
-                      <rect x="260" y="115" width="220" height="30" rx="3" fill="var(--surface-3)" stroke="var(--line)" />
+                      <rect x="260" y="115" width="220" height="30" rx="6" fill="var(--surface-3)" stroke="var(--line)" />
                       <text x="270" y="133" fill="var(--ink-hi)" className="font-display text-[9px] font-bold">
                         LEARNED ROUTER: same quality, ~40% less cost
                       </text>
@@ -803,14 +841,16 @@ export default function Home() {
                 </svg>
               </div>
             </div>
-          )}
+          </div>
 
           {/* TAB 4: SIGNALS VIEW */}
-          {activeTab === 'signals' && (
+          <div className={`absolute inset-0 p-8 overflow-y-auto transition-all duration-300 ease-out ${
+            activeTab === 'signals' ? 'opacity-100 translate-y-0 z-10 visible' : 'opacity-0 translate-y-4 pointer-events-none z-0 invisible'
+          }`}>
             <div className="space-y-6 max-w-4xl mx-auto w-full">
               <h2 className="text-xl font-display font-bold text-ink-hi flex items-center gap-2">
                 <span>Real-Time Signal Telemetry</span>
-                <span className="text-xs text-ink-lo font-sans font-normal border border-line px-1.5 py-0.5 rounded uppercase">Signal Channels</span>
+                <span className="text-xs text-ink-lo font-sans font-normal border border-line px-1.5 py-0.5 rounded-md uppercase">Signal Channels</span>
               </h2>
 
               <div className="grid grid-cols-2 gap-4">
@@ -844,23 +884,23 @@ export default function Home() {
                     unit: 'rate'
                   }
                 ].map((sig, i) => (
-                  <div key={i} className={`p-4 rounded-lg bg-surface-2 border transition-all ${
+                  <div key={i} className={`p-4 rounded-xl bg-surface-2 border transition-all duration-500 ${
                     sig.triggered ? 'border-fault/40 bg-fault/5' : 'border-line'
                   }`}>
                     <div className="flex justify-between items-start mb-2">
                       <h3 className="text-xs font-display font-bold text-ink-hi">{sig.title}</h3>
-                      <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded uppercase ${
+                      <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-md uppercase ${
                         sig.triggered ? 'bg-fault/15 text-fault' : 'bg-ok/15 text-ok'
                       }`}>
                         {sig.triggered ? 'ALARM' : 'STABLE'}
                       </span>
                     </div>
 
-                    <p className="text-[10px] text-ink-mid mb-4 h-8">{sig.desc}</p>
+                    <p className="text-[10px] text-ink-mid mb-4 h-8 font-sans">{sig.desc}</p>
 
                     {/* Sparkline block */}
                     <div className="flex items-center gap-4">
-                      <div className="h-14 w-44 bg-surface-0 border border-line/45 rounded p-1">
+                      <div className="h-14 w-44 bg-surface-0 border border-line/45 rounded-md p-1">
                         <svg viewBox="0 0 140 50" className="w-full h-full">
                           <polyline
                             fill="none"
@@ -885,37 +925,39 @@ export default function Home() {
                 ))}
               </div>
             </div>
-          )}
+          </div>
 
           {/* TAB 5: ROUTER VIEW */}
-          {activeTab === 'router' && (
+          <div className={`absolute inset-0 p-8 overflow-y-auto transition-all duration-300 ease-out ${
+            activeTab === 'router' ? 'opacity-100 translate-y-0 z-10 visible' : 'opacity-0 translate-y-4 pointer-events-none z-0 invisible'
+          }`}>
             <div className="space-y-6 max-w-4xl mx-auto w-full">
               <h2 className="text-xl font-display font-bold text-ink-hi flex items-center gap-2">
                 <span>Decentralized Router Decision log</span>
-                <span className="text-xs text-ink-lo font-sans font-normal border border-line px-1.5 py-0.5 rounded uppercase">Decision Feed</span>
+                <span className="text-xs text-ink-lo font-sans font-normal border border-line px-1.5 py-0.5 rounded-md uppercase">Decision Feed</span>
               </h2>
 
-              <div className="bg-surface-2 border border-line rounded-lg overflow-hidden shadow-2xl">
+              <div className="bg-surface-2 border border-line rounded-xl overflow-hidden shadow-2xl p-4">
                 <table className="w-full text-left font-mono text-xs border-collapse">
                   <thead>
                     <tr className="bg-surface-1 border-b border-line text-ink-lo font-display font-bold">
-                      <th className="p-3">REQUEST ID</th>
-                      <th className="p-3">STEP</th>
-                      <th className="p-3">ROUTING TARGET</th>
-                      <th className="p-3 text-right">P(SUCCESS)</th>
-                      <th className="p-3 text-right">COST</th>
-                      <th className="p-3">RATIONALE</th>
+                      <th className="p-4">REQUEST ID</th>
+                      <th className="p-4">STEP</th>
+                      <th className="p-4">ROUTING TARGET</th>
+                      <th className="p-4 text-right">P(SUCCESS)</th>
+                      <th className="p-4 text-right">COST</th>
+                      <th className="p-4">RATIONALE</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-line/30">
                     {simState === 'recovered' && (
                       <tr className="bg-ok/5 animate-fade-in text-ink-hi">
-                        <td className="p-3 font-semibold">req-7f89ac</td>
-                        <td className="p-3 text-info">causal_estimation</td>
-                        <td className="p-3"><span className="text-ok border border-ok/20 bg-ok/5 px-2 py-0.5 rounded">causal-estimation-spare</span></td>
-                        <td className="p-3 text-right tabular-nums">0.94</td>
-                        <td className="p-3 text-right tabular-nums">$0.012</td>
-                        <td className="p-3 text-ink-mid">Rerouted to spare after active fault isolation verified ATE constraints on model.</td>
+                        <td className="p-4 font-semibold">req-7f89ac</td>
+                        <td className="p-4 text-info">causal_estimation</td>
+                        <td className="p-4"><span className="text-ok border border-ok/20 bg-ok/5 px-2 py-0.5 rounded-md">causal-estimation-spare</span></td>
+                        <td className="p-4 text-right tabular-nums">0.94</td>
+                        <td className="p-4 text-right tabular-nums">$0.012</td>
+                        <td className="p-4 text-ink-mid">Rerouted to spare after active fault isolation verified ATE constraints on model.</td>
                       </tr>
                     )}
                     
@@ -926,10 +968,10 @@ export default function Home() {
                       { req: 'req-2a118e', step: 'readout', target: 'readout', p: '0.94', cost: '$0.004', rat: 'Matched Azure spare parameters successfully.' }
                     ].map((row, idx) => (
                       <tr key={idx} className="hover:bg-surface-3/30 transition-colors text-ink-mid">
-                        <td className="p-3 font-semibold text-ink-hi">{row.req}</td>
-                        <td className="p-3 text-info">{row.step}</td>
-                        <td className="p-3">
-                          <span className={`px-2 py-0.5 rounded border ${
+                        <td className="p-4 font-semibold text-ink-hi">{row.req}</td>
+                        <td className="p-4 text-info">{row.step}</td>
+                        <td className="p-4">
+                          <span className={`px-2 py-0.5 rounded-md border ${
                             row.p === '0.18' 
                               ? 'text-fault border-fault/20 bg-fault/5' 
                               : 'text-ink-hi border-line bg-surface-1'
@@ -937,16 +979,16 @@ export default function Home() {
                             {row.target}
                           </span>
                         </td>
-                        <td className={`p-3 text-right tabular-nums font-bold ${row.p === '0.18' ? 'text-fault' : 'text-ink-hi'}`}>{row.p}</td>
-                        <td className="p-3 text-right tabular-nums">{row.cost}</td>
-                        <td className="p-3 text-ink-lo max-w-[280px] truncate">{row.rat}</td>
+                        <td className={`p-4 text-right tabular-nums font-bold ${row.p === '0.18' ? 'text-fault' : 'text-ink-hi'}`}>{row.p}</td>
+                        <td className="p-4 text-right tabular-nums">{row.cost}</td>
+                        <td className="p-4 text-ink-lo max-w-[280px] truncate">{row.rat}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
             </div>
-          )}
+          </div>
 
         </main>
       </div>
