@@ -115,6 +115,13 @@ It is genuinely multi-cloud — three steps owned by three parties, an architect
 
 **But it is deliberately not the headline.** The localization claim — *which step broke, and how do you know* — holds identically whether the pipeline runs on one cloud or three, because localization operates at the *step* level. Cross-cloud makes the demo realistic and the threat model honest (a vendor's silent upgrade on a cloud you don't control). It is a feature of the setting, not the novel contribution. Google shipped cross-cloud *infrastructure* at Next '26 — data federation, networking, traffic observability. AgentLab does not compete with any of it and does not need to.
 
+## Managed Agents Integration
+
+AgentLab integrates managed agent platforms at the registry and execution layers:
+- **Registry Layer (Google Cloud Agent Platform)**: All step-agents (GCP, AWS, Azure OpenAI) are cataloged in Google Cloud's canonical registry (via `gcloud agent-platform registry agents register`) to expose their routing metadata and capabilities.
+- **AWS Bedrock Managed Runtime (Step 2)**: The causal estimation agent directly invokes an AWS Bedrock Managed Agent runtime (`boto3.client('bedrock-agentcore-runtime')` with `invoke_agent`) when `MOCK=false`.
+- **Custom Wrapper Fallback (Steps 1 & 3)**: The data-prep and readout agents use custom container services wrapping the models (configured with Google's `adk_config.yaml`). This design allows rich database tool calling (e.g. querying GCP BigQuery), bypassing the skills-in-Markdown constraint of the early GCP Managed Agents API.
+
 ## Pre-Registered Hypotheses
 
 Thresholds set in [`docs/METHODOLOGY.md`](docs/METHODOLOGY.md) *before* any data was collected. The eval rigor here is deliberate — it is how a quality claim becomes a measured result instead of a demo assertion.
